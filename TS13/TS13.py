@@ -30,26 +30,37 @@ s11 = modsq2mod_s(module_s11_square)
 
 print_latex(a_equal_b_latex_s('s11(s)', s11))
 
-# Punto 1, impedancia de entrada
+# ---------Impedancia de entrada---------- #
 
-# # Armo la MAI
-
-
-# 0----------------------------------------  2  #
-#                                               #
-#                                       -       #
-#                                       RL      #
-#                                       -       #
-#                                       -       #
+# Armo la MAI
+#                     2 
+# 0----Rg----L1---------------L2-----------  3  #
+#                     -                 -       #
+#                     -                 -       #
+#                     C                 RL      #
+#                     -                 -       #
+#                     -                 -       #
 # 1----------------------------------------  1  #
+
+Rg = 1
+RL = 1
+C  = 0.552
+L1 = 1.2547
+L2 = 0.1925
+
 
 
 Ymai = sp.Matrix([
-        [],
-        [],
-        []
+        [1/(Rg + s*L1), 0, -1/(Rg+ s*L1), 0],
+        [0, s*C + 1/RL, -s*C, -1/RL],
+        [-1/(Rg + s*L1), -s*C, s*C + 1/(Rg + s*L1) + 1/(s*L2), -1/(s*L2)],
+        [0, -1/RL, -1/(s*L2), 1/RL + 1/(s*L2)]
         
     ])
  
+Zin = tc2.calc_MAI_impedance_ij(Ymai, ii=0, jj=1)
+
+print("La impedancia de entrada de la red está dada por:")
+print_latex(a_equal_b_latex_s("Z_in(s)", sp.factor(Zin)));
 
 # ---------------------------------------- #
